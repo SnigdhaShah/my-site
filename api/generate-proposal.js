@@ -315,7 +315,10 @@ async function storeLead(leadData) {
     status: leadData.status || 'proposal_sent',
   };
 
-  const res = await fetch(`${url}/rest/v1/leads`, {
+  const endpoint = `${url}/rest/v1/leads`;
+  console.log('storeLead: POST to', endpoint, 'row:', JSON.stringify(row));
+
+  const res = await fetch(endpoint, {
     method: 'POST',
     headers: {
       'apikey': key,
@@ -326,10 +329,12 @@ async function storeLead(leadData) {
     body: JSON.stringify(row),
   });
 
+  const responseText = await res.text();
+  console.log('storeLead: response status', res.status, 'body:', responseText.slice(0, 200));
+
   if (!res.ok) {
-    const err = await res.text();
-    console.error('Supabase error:', err);
-    return { success: false, error: `Supabase error: ${res.status}` };
+    console.error('Supabase error:', res.status, responseText);
+    return { success: false, error: `Supabase error: ${res.status} ${responseText}` };
   }
 
   return { success: true };
