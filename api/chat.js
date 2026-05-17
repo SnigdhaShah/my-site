@@ -177,7 +177,7 @@ export async function chat(req, res) {
     // Parse intake markers
     if (isIntake) {
       // Detect completion: look for INTAKE_COMPLETE anywhere in message, then extract the JSON blob
-      if (message.includes('INTAKE_COMPLETE') && !message.includes('INTAKE_STEP')) {
+      if (message.toLowerCase().includes('intake_complete') && !message.toLowerCase().includes('intake_step')) {
         const jsonMatch = message.match(/\{[\s\S]*?"email"[\s\S]*?\}/);
         if (jsonMatch) {
           try {
@@ -185,7 +185,7 @@ export async function chat(req, res) {
             if (intakeData.email) {
               // Cut message at whichever comes first: the JSON blob or the marker
               const jsonIdx = message.indexOf(jsonMatch[0]);
-              const markerIdx = message.indexOf('INTAKE_COMPLETE');
+              const markerIdx = message.search(/intake_complete/i);
               const cutAt = Math.min(jsonIdx, markerIdx);
               const cleanMessage = message.slice(0, cutAt).replace(/[\s\W]+$/, '').trim();
               console.log('Intake complete detected, data:', JSON.stringify(intakeData));
@@ -198,9 +198,9 @@ export async function chat(req, res) {
       }
 
       // Detect step marker: look for INTAKE_STEP followed by a digit
-      const stepMatch = message.match(/INTAKE_STEP[^0-9]*([1-6])/);
+      const stepMatch = message.match(/INTAKE_STEP[^0-9]*([1-6])/i);
       if (stepMatch) {
-        const markerIdx = message.indexOf('INTAKE_STEP');
+        const markerIdx = message.search(/intake_step/i);
         const cleanMessage = message.slice(0, markerIdx).replace(/[^\w\s]+$/, '').trim();
         return res.json({ message: cleanMessage, intake_step: parseInt(stepMatch[1]) });
       }
