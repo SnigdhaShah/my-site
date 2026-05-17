@@ -183,7 +183,11 @@ export async function chat(req, res) {
           try {
             const intakeData = JSON.parse(jsonMatch[0]);
             if (intakeData.email) {
-              const cleanMessage = message.replace(/[\s\S]*INTAKE_COMPLETE[\s\S]*?\{[\s\S]*?\}[\s=]*/g, '').trim();
+              // Cut message at whichever comes first: the JSON blob or the marker
+              const jsonIdx = message.indexOf(jsonMatch[0]);
+              const markerIdx = message.indexOf('INTAKE_COMPLETE');
+              const cutAt = Math.min(jsonIdx, markerIdx);
+              const cleanMessage = message.slice(0, cutAt).replace(/[:\s]+$/, '').trim();
               console.log('Intake complete detected, data:', JSON.stringify(intakeData));
               return res.json({ message: cleanMessage, intake_complete: true, intake_data: intakeData });
             }
