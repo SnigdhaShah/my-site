@@ -1,0 +1,19 @@
+{
+  "name": "connecting-the-dots-website",
+  "version": "1.0.0",
+  "description": "Snigdha Aggarwal's consulting website with AI chatbot",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "pdf-lib": "^1.17.1"
+  }
+}
