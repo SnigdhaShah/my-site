@@ -202,3 +202,5 @@ export async function chat(req, res) {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+export default chat;
