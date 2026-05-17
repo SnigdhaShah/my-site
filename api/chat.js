@@ -187,7 +187,7 @@ export async function chat(req, res) {
               const jsonIdx = message.indexOf(jsonMatch[0]);
               const markerIdx = message.indexOf('INTAKE_COMPLETE');
               const cutAt = Math.min(jsonIdx, markerIdx);
-              const cleanMessage = message.slice(0, cutAt).replace(/[:\s]+$/, '').trim();
+              const cleanMessage = message.slice(0, cutAt).replace(/[\s\W]+$/, '').trim();
               console.log('Intake complete detected, data:', JSON.stringify(intakeData));
               return res.json({ message: cleanMessage, intake_complete: true, intake_data: intakeData });
             }
