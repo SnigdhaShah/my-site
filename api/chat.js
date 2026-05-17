@@ -176,35 +176,27 @@ export async function chat(req, res) {
 
     // Parse intake markers
     if (isIntake) {
-      // Match <INTAKE_COMPLETE>{...}</INTAKE_COMPLETE> or =INTAKE_COMPLETE={...}= (model variations)
-      const completeMatch =
-        message.match(/<INTAKE_COMPLETE>([\s\S]*?)<\/INTAKE_COMPLETE>/) ||
-        message.match(/=INTAKE_COMPLETE=(\{[\s\S]*?\})=?/) ||
-        message.match(/INTAKE_COMPLETE[=:>\s]+(\{[\s\S]*?\})/);
-      if (completeMatch) {
-        const cleanMessage = message
-          .replace(/<INTAKE_COMPLETE>[\s\S]*?<\/INTAKE_COMPLETE>/, '')
-          .replace(/=?INTAKE_COMPLETE[=:>\s]+\{[\s\S]*?\}=?/, '')
-          .trim();
-        try {
-          const intakeData = JSON.parse(completeMatch[1]);
-          return res.json({ message: cleanMessage, intake_complete: true, intake_data: intakeData });
-        } catch (e) {
-          console.error('Failed to parse intake JSON:', completeMatch[1]);
-          return res.status(500).json({ error: 'Failed to parse intake data' });
+      // Detect completion: look for INTAKE_COMPLETE anywhere in message, then extract the JSON blob
+      if (message.includes('INTAKE_COMPLETE') && !message.includes('INTAKE_STEP')) {
+        const jsonMatch = message.match(/\{[\s\S]*?"email"[\s\S]*?\}/);
+        if (jsonMatch) {
+          try {
+            const intakeData = JSON.parse(jsonMatch[0]);
+            if (intakeData.email) {
+              const cleanMessage = message.replace(/[\s\S]*INTAKE_COMPLETE[\s\S]*?\{[\s\S]*?\}[\s=]*/g, '').trim();
+              console.log('Intake complete detected, data:', JSON.stringify(intakeData));
+              return res.json({ message: cleanMessage, intake_complete: true, intake_data: intakeData });
+            }
+          } catch (e) {
+            console.error('Failed to parse intake JSON:', jsonMatch[0]);
+          }
         }
       }
 
-      // Match <INTAKE_STEP>N</INTAKE_STEP> or =INTAKE_STEP=N= (model variations)
-      const stepMatch =
-        message.match(/<INTAKE_STEP>(\d+)<\/INTAKE_STEP>/) ||
-        message.match(/=INTAKE_STEP=(\d+)=?/) ||
-        message.match(/INTAKE_STEP[=:>\s]+(\d+)/);
+      // Detect step marker: look for INTAKE_STEP followed by a digit
+      const stepMatch = message.match(/INTAKE_STEP[^0-9]*([1-6])/);
       if (stepMatch) {
-        const cleanMessage = message
-          .replace(/<INTAKE_STEP>\d+<\/INTAKE_STEP>/, '')
-          .replace(/=?INTAKE_STEP[=:>\s]+\d+=?/, '')
-          .trim();
+        const cleanMessage = message.replace(/[^\w\s]*INTAKE_STEP[^0-9]*[1-6][^\w\s]*/g, '').trim();
         return res.json({ message: cleanMessage, intake_step: parseInt(stepMatch[1]) });
       }
     }
