@@ -34,6 +34,11 @@ export default async function handler(req, res) {
       key_preview: key.slice(0, 20) + '...',
     });
   } catch (e) {
-    return res.json({ error: e.message });
+    return res.json({
+      error: e.message,
+      cause: e.cause?.message || null,
+      url_attempted: endpoint,
+      key_preview: key.slice(0, 20) + '...',
+    });
   }
 }
