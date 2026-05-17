@@ -179,7 +179,7 @@ async function renderProposalPdf({ company_name, contact_name, sections }) {
   cover.drawText('SNIGDHA AGGARWAL SHAH', {
     x: 50, y: 732, size: 22, font: fontBold, color: rgb(1, 1, 1),
   });
-  cover.drawText('Connecting The Dots — Philanthropy Strategy & India Expertise', {
+  cover.drawText('Connecting The Dots - Philanthropy Strategy & India Expertise', {
     x: 50, y: 710, size: 12, font, color: rgb(0.8, 0.8, 0.8),
   });
   // Proposal title
@@ -572,7 +572,13 @@ export async function generateProposal(req, res) {
         continue;
       }
 
-      const result = await executeTool(toolCall.function.name, args);
+      let result;
+      try {
+        result = await executeTool(toolCall.function.name, args);
+      } catch (toolError) {
+        console.error(`Tool ${toolCall.function.name} threw:`, toolError.message);
+        result = { success: false, error: toolError.message };
+      }
 
       // Track what succeeded
       if (toolCall.function.name === 'render_proposal_pdf' && result.success) results.proposal = true;
