@@ -595,6 +595,24 @@ export async function generateProposal(req, res) {
     console.log(`Agent turn ${turn}: Executed ${assistantMessage.tool_calls.length} tool(s), continuing...`);
   }
 
+  // Store lead directly if agent didn't call store_lead
+  if (!results.stored && intakeData) {
+    try {
+      const stored = await storeLead({
+        company: intakeData.company || null,
+        email: intakeData.email || null,
+        challenge: intakeData.challenge || null,
+        budget: intakeData.budget || null,
+        score: 'MEDIUM',
+        status: 'proposal_sent',
+      });
+      if (stored.success) results.stored = true;
+      else console.error('Fallback store_lead failed:', stored.error);
+    } catch (e) {
+      console.error('Fallback store_lead threw:', e.message);
+    }
+  }
+
   console.log('Agent pipeline complete:', results);
   return res.json({ success: true, results });
 }
