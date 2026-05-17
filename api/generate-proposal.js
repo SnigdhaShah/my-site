@@ -584,3 +584,5 @@ export async function generateProposal(req, res) {
   console.log('Agent pipeline complete:', results);
   return res.json({ success: true, results });
 }
+
+export default generateProposal;
