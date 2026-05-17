@@ -176,9 +176,16 @@ export async function chat(req, res) {
 
     // Parse intake markers
     if (isIntake) {
-      const completeMatch = message.match(/<INTAKE_COMPLETE>([\s\S]*?)<\/INTAKE_COMPLETE>/);
+      // Match <INTAKE_COMPLETE>{...}</INTAKE_COMPLETE> or =INTAKE_COMPLETE={...}= (model variations)
+      const completeMatch =
+        message.match(/<INTAKE_COMPLETE>([\s\S]*?)<\/INTAKE_COMPLETE>/) ||
+        message.match(/=INTAKE_COMPLETE=(\{[\s\S]*?\})=?/) ||
+        message.match(/INTAKE_COMPLETE[=:>\s]+(\{[\s\S]*?\})/);
       if (completeMatch) {
-        const cleanMessage = message.replace(/<INTAKE_COMPLETE>[\s\S]*?<\/INTAKE_COMPLETE>/, '').trim();
+        const cleanMessage = message
+          .replace(/<INTAKE_COMPLETE>[\s\S]*?<\/INTAKE_COMPLETE>/, '')
+          .replace(/=?INTAKE_COMPLETE[=:>\s]+\{[\s\S]*?\}=?/, '')
+          .trim();
         try {
           const intakeData = JSON.parse(completeMatch[1]);
           return res.json({ message: cleanMessage, intake_complete: true, intake_data: intakeData });
@@ -188,9 +195,16 @@ export async function chat(req, res) {
         }
       }
 
-      const stepMatch = message.match(/<INTAKE_STEP>(\d+)<\/INTAKE_STEP>/);
+      // Match <INTAKE_STEP>N</INTAKE_STEP> or =INTAKE_STEP=N= (model variations)
+      const stepMatch =
+        message.match(/<INTAKE_STEP>(\d+)<\/INTAKE_STEP>/) ||
+        message.match(/=INTAKE_STEP=(\d+)=?/) ||
+        message.match(/INTAKE_STEP[=:>\s]+(\d+)/);
       if (stepMatch) {
-        const cleanMessage = message.replace(/<INTAKE_STEP>\d+<\/INTAKE_STEP>/, '').trim();
+        const cleanMessage = message
+          .replace(/<INTAKE_STEP>\d+<\/INTAKE_STEP>/, '')
+          .replace(/=?INTAKE_STEP[=:>\s]+\d+=?/, '')
+          .trim();
         return res.json({ message: cleanMessage, intake_step: parseInt(stepMatch[1]) });
       }
     }
