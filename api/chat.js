@@ -196,7 +196,8 @@ export async function chat(req, res) {
       // Detect step marker: look for INTAKE_STEP followed by a digit
       const stepMatch = message.match(/INTAKE_STEP[^0-9]*([1-6])/);
       if (stepMatch) {
-        const cleanMessage = message.replace(/[^\w\s]*INTAKE_STEP[^0-9]*[1-6][^\w\s]*/g, '').trim();
+        const markerIdx = message.indexOf('INTAKE_STEP');
+        const cleanMessage = message.slice(0, markerIdx).replace(/[^\w\s]+$/, '').trim();
         return res.json({ message: cleanMessage, intake_step: parseInt(stepMatch[1]) });
       }
     }
