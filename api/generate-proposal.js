@@ -517,6 +517,7 @@ export async function generateProposal(req, res) {
           messages,
           tools,
           max_tokens: 4096,
+          stream: false,
         }),
       });
     } catch (fetchError) {
@@ -530,7 +531,14 @@ export async function generateProposal(req, res) {
       return res.status(502).json({ error: 'Agent API call failed', details: err });
     }
 
-    const data = await response.json();
+    let data;
+    try {
+      data = await response.json();
+    } catch (parseError) {
+      const raw = await response.text().catch(() => '(unreadable)');
+      console.error('Agent response parse error:', parseError.message, 'Raw:', raw.slice(0, 200));
+      return res.status(502).json({ error: 'Failed to parse OpenRouter response', details: parseError.message });
+    }
     const choice = data.choices?.[0];
     if (!choice) {
       console.error('Agent: no choice in response');
