@@ -580,6 +580,13 @@ ul   { list-style: none; }
   font-size: 13px;
   color: var(--slate-soft);
 }
+.testimonial-logo {
+  height: 28px;
+  width: auto;
+  margin-top: 10px;
+  opacity: 0.6;
+  filter: grayscale(100%);
+}
 
 .testimonial-placeholder .placeholder-note {
   font-size: 14px;
