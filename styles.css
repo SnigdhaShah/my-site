@@ -107,7 +107,7 @@ ul   { list-style: none; }
   top: calc(100% + 12px);
   left: 0;
   width: 240px;
-  background: var(--slate);
+  background: var(--forest);
   color: var(--cream);
   font-size: 12.5px;
   line-height: 1.65;
@@ -129,7 +129,7 @@ ul   { list-style: none; }
   left: 20px;
   width: 10px;
   height: 6px;
-  background: var(--slate);
+  background: var(--forest);
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
 .logo-tooltip-wrap:hover .logo-tooltip {
@@ -229,7 +229,7 @@ ul   { list-style: none; }
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 140px var(--gutter) 80px;
+  padding: 190px var(--gutter) 80px;
   max-width: calc(var(--w) + var(--gutter) * 2);
   margin-inline: auto;
   position: relative;
