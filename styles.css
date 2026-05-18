@@ -760,7 +760,7 @@ ul   { list-style: none; }
    ================================================================ */
 .contact-grid {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 380px 1fr;
   gap: 80px;
   align-items: start;
 }
@@ -771,12 +771,41 @@ ul   { list-style: none; }
   color: var(--slate-mid);
   margin-bottom: 16px;
 }
-.contact-process {
-  font-size: 14px;
+.process-steps {
+  list-style: none;
+  margin: 24px 0 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.process-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.process-num {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--terra);
+  padding-top: 3px;
+  flex-shrink: 0;
+}
+.process-body strong {
+  display: block;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--slate);
+  margin-bottom: 4px;
+  letter-spacing: 0.01em;
+}
+.process-body p {
+  font-size: 13px;
   line-height: 1.7;
   color: var(--slate-soft);
-  margin-bottom: 32px;
-  font-style: italic;
+  margin: 0;
 }
 
 .contact-links {
