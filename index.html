@@ -7,8 +7,8 @@
   <meta name="description" content="Strategic philanthropy advisory for CSR-eligible companies, HNIs, and foundations navigating impact in India.">
   <meta property="og:title" content="Snigdha Aggarwal Shah — Connecting The Dots">
   <meta property="og:description" content="Strategic philanthropy guidance for individuals, corporates with CSR budgets, and nonprofits navigating impact in India.">
-  <meta property="og:image" content="aatmic-logo.png">
-  <meta property="og:url" content="https://my-site-six-tawny.vercel.app">
+  <meta property="og:image" content="https://ctdforgood.com/Connecting_The_Dots.png">
+  <meta property="og:url" content="https://ctdforgood.com">
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,7 +68,7 @@
           I help individuals build giving practices that are intentional, structured, and built to last — from first gift to formal foundation.
         </p>
         <div class="reveal delay-3">
-          <a href="#contact" class="btn btn-primary">Let's talk</a>
+          <button class="btn btn-primary" data-open-modal>Let's talk</button>
         </div>
       </div>
     </section>
@@ -247,7 +247,7 @@
         <div class="cta-inner reveal">
           <h2 class="cta-headline" id="cta-heading">Most good giving starts<br>with one conversation.</h2>
           <p class="cta-sub">If you're navigating philanthropy in India — as a company, an individual, or an organisation — I'd like to understand what you're working on. Not a pitch. Not a proposal. A starting point.</p>
-          <a href="#contact" class="btn btn-ghost">Let's talk</a>
+          <button class="btn btn-ghost" data-open-modal>Let's talk</button>
         </div>
       </div>
       <div class="cta-decor" aria-hidden="true">
@@ -370,6 +370,41 @@
         </div>
       </div>
     </section>
+
+  <!-- ============================================================
+       CONTACT MODAL
+  ============================================================ -->
+  <div class="modal-overlay" id="contact-modal" role="dialog" aria-modal="true" aria-labelledby="modal-heading" hidden>
+    <div class="modal-box">
+      <button class="modal-close" id="modal-close" aria-label="Close">&#x2715;</button>
+      <h2 class="modal-heading" id="modal-heading">Start the conversation</h2>
+      <p class="modal-sub">Tell me what you're working on. I'll read it carefully and reach out to set up a first call.</p>
+      <form class="contact-form" id="modal-form" novalidate>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label" for="modal-name">Name</label>
+            <input class="form-input" type="text" id="modal-name" name="name" required autocomplete="name" placeholder="Your name">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="modal-org">Organisation</label>
+            <input class="form-input" type="text" id="modal-org" name="org" autocomplete="organization" placeholder="Your organisation">
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="modal-email">Email</label>
+          <input class="form-input" type="email" id="modal-email" name="email" required autocomplete="email" placeholder="your@email.com">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="modal-message">What are you working on?</label>
+          <textarea class="form-input form-textarea" id="modal-message" name="message" required placeholder="Tell me a little about what you're working on — what the challenge is, where you're stuck, or what you're trying to build."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Send message</button>
+        <div class="form-success" id="modal-success" role="status" aria-live="polite" hidden>
+          Thank you — I'll read this carefully and reach out to set up a first call.
+        </div>
+      </form>
+    </div>
+  </div>
 
   </main>
 
@@ -778,17 +813,13 @@
       });
     });
 
-    /* ─── Contact form ─── */
+    /* ─── Contact form (bottom section) ─── */
     const form = document.getElementById('contact-form');
     const successMsg = document.getElementById('form-success');
 
     form.addEventListener('submit', e => {
       e.preventDefault();
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-      /* In production: replace this block with your form service (Formspree, etc.) */
+      if (!form.checkValidity()) { form.reportValidity(); return; }
       const btn = form.querySelector('button[type="submit"]');
       btn.disabled = true;
       btn.textContent = 'Sending…';
@@ -796,6 +827,41 @@
         form.reset();
         btn.hidden = true;
         successMsg.removeAttribute('hidden');
+      }, 800);
+    });
+
+    /* ─── Modal ─── */
+    const modal = document.getElementById('contact-modal');
+    const modalForm = document.getElementById('modal-form');
+    const modalSuccess = document.getElementById('modal-success');
+
+    const openModal = () => {
+      modal.removeAttribute('hidden');
+      document.body.style.overflow = 'hidden';
+      modal.querySelector('input, textarea').focus();
+    };
+    const closeModal = () => {
+      modal.setAttribute('hidden', '');
+      document.body.style.overflow = '';
+    };
+
+    document.querySelectorAll('[data-open-modal]').forEach(btn => {
+      btn.addEventListener('click', openModal);
+    });
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+
+    modalForm.addEventListener('submit', e => {
+      e.preventDefault();
+      if (!modalForm.checkValidity()) { modalForm.reportValidity(); return; }
+      const btn = modalForm.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      setTimeout(() => {
+        modalForm.reset();
+        btn.hidden = true;
+        modalSuccess.removeAttribute('hidden');
       }, 800);
     });
   </script>
