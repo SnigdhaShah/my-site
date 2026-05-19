@@ -1064,6 +1064,15 @@ ul   { list-style: none; }
     align-items: flex-start;
     gap: 16px;
   }
+
+  /* Logo — shrink on mobile so nav doesn't eat the hero */
+  .nav-logo { height: 72px; }
+
+  /* Hero — enough top padding to clear the smaller logo */
+  .hero { padding-top: 130px; }
+
+  /* Modal — breathable padding on small screens */
+  .modal-box { padding: 28px 24px; }
 }
 
 /* ================================================================
