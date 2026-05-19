@@ -468,7 +468,7 @@ ul   { list-style: none; }
   gap: 24px;
   padding: 44px 0;
   border-bottom: 1px solid var(--border);
-  transition: background 0.2s;
+  transition: background 0.2s, opacity 0.18s;
 }
 /* Odd items (left column): right border */
 .service:nth-child(odd):not(.service-wide) {
