@@ -62,7 +62,7 @@
         </div>
         <p class="eyebrow reveal" id="hero-eyebrow">Philanthropy Advisory &nbsp;·&nbsp; India</p>
         <h1 class="hero-headline reveal delay-1" id="hero-headline">
-          You have the intention. I help you build the practice.
+          You have the intention.<br>I help you build your philanthropic journey.
         </h1>
         <p class="hero-sub reveal delay-2" id="hero-sub">
           I help individuals build giving practices that are intentional, structured, and built to last — from first gift to formal foundation.
@@ -785,7 +785,7 @@
     const heroContent = {
       individuals: {
         eyebrow: 'Philanthropy Advisory &nbsp;·&nbsp; India',
-        headline: 'You have the intention. I help you build the practice.',
+        headline: 'You have the intention.<br>I help you build your philanthropic journey.',
         sub: 'I help individuals build giving practices that are intentional, structured, and built to last — from first gift to formal foundation.'
       },
       corporates: {
@@ -838,7 +838,7 @@
         [eyebrow, headline, sub].forEach(el => el.style.opacity = '0');
         setTimeout(() => {
           eyebrow.innerHTML = content.eyebrow;
-          headline.textContent = content.headline;
+          headline.innerHTML = content.headline;
           sub.textContent = content.sub;
           [eyebrow, headline, sub].forEach(el => el.style.opacity = '');
         }, 180);
